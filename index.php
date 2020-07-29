@@ -11,5 +11,29 @@ if(isset($_REQUEST['name'])){
     file_put_contents($path, $data);
     $cmd = 'python3 yolo.py --image '.$path.' --yolo yolo-coco';
     $count = shell_exec($cmd);
-    echo $count;
+
+    // Get the image and convert into string
+    $img = file_get_contents($path);
+
+    // Encode the image string data into base64
+    $data = base64_encode($img);
+    $json['count'] = $count;
+    $json['image'] = $data;
+    unlink($path);
+    echo json_encode($json);
+}else{
+
+    $path = 'images/f3.png';
+    $cmd = 'python3 yolo.py --image '.$path.' --yolo yolo-coco';
+    $count = shell_exec($cmd);
+
+    // Get the image and convert into string
+    $img = file_get_contents($path);
+
+    // Encode the image string data into base64
+    $data = base64_encode($img);
+    $json['count'] = $count;
+    $json['image'] = $data;
+    unlink($path);
+    echo json_encode($json);
 }
