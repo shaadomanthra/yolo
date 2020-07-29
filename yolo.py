@@ -35,7 +35,6 @@ weightsPath = os.path.sep.join([args["yolo"], "yolov3.weights"])
 configPath = os.path.sep.join([args["yolo"], "yolov3.cfg"])
 
 # load our YOLO object detector trained on COCO dataset (80 classes)
-print("[INFO] loading YOLO from disk...")
 net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
 
 # load our input image and grab its spatial dimensions
@@ -57,7 +56,7 @@ layerOutputs = net.forward(ln)
 end = time.time()
 
 # show timing information on YOLO
-print("[INFO] YOLO took {:.6f} seconds".format(end - start))
+# print("[INFO] YOLO took {:.6f} seconds".format(end - start))
 
 # initialize our lists of detected bounding boxes, confidences, and
 # class IDs, respectively
@@ -101,6 +100,7 @@ for output in layerOutputs:
 idxs = cv2.dnn.NMSBoxes(boxes, confidences, args["confidence"],
 	args["threshold"])
 
+count = 0
 # ensure at least one detection exists
 if len(idxs) > 0:
 	# loop over the indexes we are keeping
@@ -110,19 +110,15 @@ if len(idxs) > 0:
 		(w, h) = (boxes[i][2], boxes[i][3])
 
 		# draw a bounding box rectangle and label on the image
+
 		color = [int(c) for c in COLORS[classIDs[i]]]
-		cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
-		text = "{}: {:.4f}".format(LABELS[classIDs[i]], confidences[i])
-		cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
-			0.5, color, 2)
 
-while True:
-	# show the output image
-	cv2.imshow("Image", image)
+		if LABELS[classIDs[i]] == 'person':
+			count = count +1
+			cv2.rectangle(image, (x, y), (x + w, y + h), color, 2)
+			text = "{}: {:.4f}".format(LABELS[classIDs[i]], confidences[i])
+			cv2.putText(image, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
+				0.5, color, 2)
+			cv2.imwrite('images/output.jpg',image)
 
-	if cv2.waitKey(1) &0xFF == ord('q'):
-		break
-
-
-# video_capture.release()
-cv2.destroyAllWindows()
+print(count)
