@@ -121,5 +121,5 @@ if len(idxs) > 0:
 				0.5, color, 2)
 
 
-cv2.imwrite('output/'+args["image"],image)
+cv2.imwrite(args["image"],image)
 print(count)
