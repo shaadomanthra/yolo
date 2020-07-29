@@ -23,7 +23,7 @@ if(isset($_REQUEST['name'])){
     echo json_encode($json);
 }else{
 
-    $path = 'images/f3.png';
+    $path = 'images/f2.jpg';
     $cmd = 'python3 yolo.py --image '.$path.' --yolo yolo-coco';
     $count = shell_exec($cmd);
 
@@ -34,6 +34,6 @@ if(isset($_REQUEST['name'])){
     $data = base64_encode($img);
     $json['count'] = $count;
     $json['image'] = $data;
-    unlink($path);
+    //unlink($path);
     echo json_encode($json);
 }
